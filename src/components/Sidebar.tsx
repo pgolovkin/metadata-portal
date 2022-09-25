@@ -20,16 +20,17 @@ const searchStringInArray = (str: string, allChains: Chains) => {
       result.push(key);
   });
   result.sort((a, b) => {
-      if (allChains[a].testnet && allChains[b].testnet
-        || !allChains[a].testnet && !allChains[b].testnet) {
-        return allChains[a].title.localeCompare(allChains[b].title)
-      } else if (allChains[a].testnet) {
-        return 1;
-      } else {
-        return -1;
-      }
+    if (
+      (allChains[a].testnet && allChains[b].testnet) ||
+      (!allChains[a].testnet && !allChains[b].testnet)
+    ) {
+      return allChains[a].title.localeCompare(allChains[b].title);
+    } else if (allChains[a].testnet) {
+      return 1;
+    } else {
+      return -1;
     }
-  );
+  });
   return result;
 };
 
@@ -43,16 +44,17 @@ export default function Sidebar({
 }: Props): JSX.Element {
   const [searchResults, setSearchResults] = useState<string[]>(
     Object.keys(allChains).sort((a, b) => {
-        if (allChains[a].testnet && allChains[b].testnet
-          || !allChains[a].testnet && !allChains[b].testnet) {
-          return allChains[a].title.localeCompare(allChains[b].title)
-        } else if (allChains[a].testnet) {
-          return 1;
-        } else {
-          return -1;
-        }
+      if (
+        (allChains[a].testnet && allChains[b].testnet) ||
+        (!allChains[a].testnet && !allChains[b].testnet)
+      ) {
+        return allChains[a].title.localeCompare(allChains[b].title);
+      } else if (allChains[a].testnet) {
+        return 1;
+      } else {
+        return -1;
       }
-    )
+    })
   );
 
   const specs = allChains[currentNetwork];
