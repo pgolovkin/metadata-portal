@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 use std::{fmt, fs};
-use anyhow::bail;
 
+use anyhow::bail;
 use log::debug;
 use serde::de::{self, value, SeqAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
@@ -55,15 +55,15 @@ pub(crate) struct AppConfig {
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct ChainJSON {
-  pub(crate) name: String,
-  pub(crate) nodes: Vec<ChainNode>,
-  pub(crate) icon: String,
+    pub(crate) name: String,
+    pub(crate) nodes: Vec<ChainNode>,
+    pub(crate) icon: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct ChainNode {
-  pub(crate) name: String,
-  pub(crate) url: String,
+    pub(crate) name: String,
+    pub(crate) url: String,
 }
 
 #[cfg(test)]
@@ -94,14 +94,14 @@ impl AppConfig {
         Ok(config)
     }
 
-    pub(crate) fn save(&self, path: impl AsRef<Path>) -> anyhow::Result<()>{
-      let write_result = fs::write(&path, toml::to_string_pretty(self).unwrap().as_bytes());
-      match write_result {
-        Ok(_) => println!("File {} was updated!", path.as_ref().to_str().unwrap()),
-        Err(e)=> bail!("Error saving config.toml! {}", e),
-      }
+    pub(crate) fn save(&self, path: impl AsRef<Path>) -> anyhow::Result<()> {
+        let write_result = fs::write(&path, toml::to_string_pretty(self).unwrap().as_bytes());
+        match write_result {
+            Ok(_) => println!("File {} was updated!", path.as_ref().to_str().unwrap()),
+            Err(e) => bail!("Error saving config.toml! {}", e),
+        }
 
-      Ok(())
+        Ok(())
     }
 }
 

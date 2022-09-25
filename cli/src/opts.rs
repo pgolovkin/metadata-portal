@@ -53,10 +53,9 @@ pub(crate) struct UpdateOpts {
 
 #[derive(Parser)]
 pub(crate) struct ChainsOpts {
+    #[clap(long, default_value = "prod")]
+    pub(crate) env: String,
 
-  #[clap(long, default_value = "prod")]
-  pub(crate) env: String,
-
-  #[clap(long, default_value = "5")]
-  pub(crate) version: String,
+    #[clap(long, default_value = "5")]
+    pub(crate) version: String,
 }

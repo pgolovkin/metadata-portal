@@ -1,5 +1,6 @@
 extern crate core;
 
+mod chains_config;
 mod cleaner;
 mod collector;
 mod config;
@@ -13,7 +14,6 @@ mod signer;
 mod source;
 mod updater;
 mod verifier;
-mod chains_config;
 
 use std::process::exit;
 
@@ -21,6 +21,7 @@ use clap::StructOpt;
 use env_logger::Env;
 use log::error;
 
+use crate::chains_config::update_chains_config;
 use crate::cleaner::clean;
 use crate::collector::collect;
 use crate::config::AppConfig;
@@ -31,7 +32,6 @@ use crate::signer::sign;
 use crate::updater::source::UpdateSource;
 use crate::updater::{update_from_github, update_from_node};
 use crate::verifier::verify;
-use crate::chains_config::update_chains_config;
 
 /// Main entry point of the `metadata-cli`
 fn main() {

@@ -63,9 +63,9 @@ pub(crate) fn export_specs(config: &AppConfig, fetcher: impl Fetcher) -> Result<
                 metadata_version: active_version,
                 latest_metadata: ReactAssetPath::from_fs_path(&latest_meta, &config.public_dir)?,
                 testnet: match chain.testnet {
-                  Some(is_test) => is_test,
-                  None => false,
-                }
+                    Some(is_test) => is_test,
+                    None => false,
+                },
             },
         );
     }
