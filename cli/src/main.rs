@@ -13,6 +13,7 @@ mod signer;
 mod source;
 mod updater;
 mod verifier;
+mod chains_config;
 
 use std::process::exit;
 
@@ -30,6 +31,7 @@ use crate::signer::sign;
 use crate::updater::source::UpdateSource;
 use crate::updater::{update_from_github, update_from_node};
 use crate::verifier::verify;
+use crate::chains_config::update_chains_config;
 
 /// Main entry point of the `metadata-cli`
 fn main() {
@@ -38,7 +40,7 @@ fn main() {
         .init();
 
     let opts: Opts = Opts::parse();
-    let config = match AppConfig::load(opts.config) {
+    let config = match AppConfig::load(&opts.config) {
         Ok(config) => config,
         Err(err) => {
             error!("{}", err);
@@ -63,6 +65,7 @@ fn main() {
             ),
         },
         SubCommand::CheckDeployment => check_deployment(config),
+        SubCommand::UpdateChainConfig(chains_opts) => update_chains_config(chains_opts),
     };
 
     if let Err(err) = result {
