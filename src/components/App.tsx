@@ -9,7 +9,6 @@ import "./App.css";
 import Sidebar from "./Sidebar";
 import MetadataTab from "./MetadataTab";
 import SpecsTab from "./SpecsTab";
-import {data} from "autoprefixer";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
