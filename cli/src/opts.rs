@@ -56,6 +56,6 @@ pub(crate) struct ChainsOpts {
     #[clap(long, default_value = "prod")]
     pub(crate) env: String,
 
-    #[clap(long, default_value = "5")]
+    #[clap(long, default_value = "v5")]
     pub(crate) version: String,
 }

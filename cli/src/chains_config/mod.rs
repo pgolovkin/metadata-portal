@@ -38,13 +38,12 @@ pub(crate) struct ChainNode {
     pub(crate) url: String,
 }
 
-const EXCLUDE_CHAINS: [&str; 8] = [
+const EXCLUDE_CHAINS: [&str; 7] = [
     "Polkadot",
     "Kusama",
     "Westend",
     "Moonbeam",
     "Moonriver",
-    "Moonbase Alpha",
     "Moonbase Relay Testnet",
     "Arctic Relay Testnet",
 ];
