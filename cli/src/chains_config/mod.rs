@@ -38,14 +38,11 @@ pub(crate) struct ChainNode {
     pub(crate) url: String,
 }
 
-const EXCLUDE_CHAINS: [&str; 7] = [
+const EXCLUDE_CHAINS: [&str; 4] = [
     "Polkadot",
     "Kusama",
     "Westend",
-    "Moonbeam",
-    "Moonriver",
-    "Moonbase Relay Testnet",
-    "Arctic Relay Testnet",
+    "Arctic Relay Testnet"
 ];
 
 pub(crate) fn update_chains_config(chains_opts: ChainsOpts) -> Result<()> {
@@ -93,9 +90,19 @@ pub(crate) fn update_chains_config(chains_opts: ChainsOpts) -> Result<()> {
                     github_release: None,
                     token_decimals: None,
                     token_unit: None,
-                    testnet: match chain.options {
+                    testnet: match &chain.options {
                         Some(options) => Some(options.contains(&String::from("testnet"))),
                         None => Some(false),
+                    },
+                    encryption: match &chain.options {
+                        Some(options) => {
+                            if options.contains(&String::from("ethereumBased")) {
+                                Some(String::from("ethereum"))
+                            } else {
+                                None
+                            }
+                        }
+                        None => None,
                     },
                 });
             }

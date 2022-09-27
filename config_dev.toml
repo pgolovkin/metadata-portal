@@ -5,6 +5,7 @@ qr_dir = 'public/qr'
 [verifier]
 name = 'Novasama Technologies'
 public_key = '16d5a6266345874d8f5b7f88a6619711b2829b52b2865826b1ecefb62beef34f'
+ethereum_public_key = '031b195495f907908aeedd8e9a0ae128dcf23b6a7425dd16d282df7d867855e7f1'
 
 [[chains]]
 name = 'westmint'
@@ -38,6 +39,22 @@ rpc_endpoints = ['wss://karura.api.onfinality.io/public-ws']
 testnet = false
 
 [[chains]]
+name = 'moonriver'
+title = 'Moonriver'
+color = '#0E132E'
+icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Moonriver.svg'
+rpc_endpoints = [
+    'wss://moonriver.api.onfinality.io/ws?apikey=41935d3d-3d6c-4a90-a0e1-33c065401d05',
+    'wss://moonriver.api.onfinality.io/public-ws',
+    'wss://moonriver-rpc.dwellir.com',
+    'wss://wss.moonriver.moonbeam.network',
+    'wss://moonriver.public.blastapi.io',
+    'wss://rpc.pinknode.io/moonriver/explorer',
+]
+testnet = false
+encryption = 'ethereum'
+
+[[chains]]
 name = 'moonbase'
 title = 'Moonbase Alpha'
 color = '#F45B5B'
@@ -48,6 +65,7 @@ rpc_endpoints = [
     'wss://wss.testnet.moonbeam.network',
 ]
 testnet = true
+encryption = 'ethereum'
 
 [[chains]]
 name = 'shiden'
@@ -215,6 +233,20 @@ rpc_endpoints = [
     'wss://rpc.pinknode.io/mandala/explorer',
 ]
 testnet = true
+
+[[chains]]
+name = 'moonbeam'
+title = 'Moonbeam'
+color = '#53cbc9'
+icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Moonbeam.svg'
+rpc_endpoints = [
+    'wss://moonbeam-rpc.dwellir.com',
+    'wss://moonbeam.api.onfinality.io/public-ws',
+    'wss://moonbeam.public.blastapi.io',
+    'wss://wss.api.moonbeam.network',
+]
+testnet = false
+encryption = 'ethereum'
 
 [[chains]]
 name = 'astar'
@@ -532,6 +564,14 @@ title = 'Aleph Zero Testnet'
 color = '#231764'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/AlephZero_Testnet.svg'
 rpc_endpoints = ['wss://ws.test.azero.dev']
+testnet = true
+
+[[chains]]
+name = 'moonbase relay testnet'
+title = 'Moonbase Relay Testnet'
+color = '#1AC860'
+icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Moonbase_Alpha_Testnet.svg'
+rpc_endpoints = ['wss://frag-moonbase-relay-rpc-ws.g.moonbase.moonbeam.network']
 testnet = true
 
 [[chains]]

@@ -1,11 +1,11 @@
 use anyhow::{anyhow, bail, Result};
-use definitions::crypto::Encryption;
 use definitions::network_specs::NetworkSpecsToSend;
 use generate_message::helpers::{meta_fetch, specs_agnostic, MetaFetched};
 use generate_message::parser::Token;
 use log::warn;
 
 use crate::config::Chain;
+use crate::lib::types::get_crypto;
 
 pub(crate) trait Fetcher {
     fn fetch_specs(&self, chain: &Chain) -> Result<NetworkSpecsToSend>;
@@ -38,7 +38,8 @@ impl Fetcher for RpcFetcher {
                     unit: token_unit.to_string(),
                 },
             );
-            specs_agnostic(url, Encryption::Sr25519, optional_token_override, None)
+
+            specs_agnostic(url, get_crypto(&chain), optional_token_override, None)
         })
         .map_err(|e| anyhow!("{:?}", e))?;
         if specs.name.to_lowercase() != chain.name {

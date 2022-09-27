@@ -13,7 +13,7 @@ use generate_message::parser::{
 };
 use log::info;
 use sp_core::bytes::to_hex;
-use sp_core::{sr25519, ByteArray, Pair, H256};
+use sp_core::{sr25519, Pair, H256, ecdsa};
 
 use crate::lib::path::{ContentType, QrFileName};
 
@@ -23,6 +23,7 @@ pub(crate) fn generate_metadata_qr(
     target_dir: &Path,
     sign: bool,
     signing_key: String,
+    encryption: &Encryption,
 ) -> anyhow::Result<PathBuf> {
     let content = ContentLoadMeta::generate(&meta_values.meta, genesis_hash);
 
@@ -40,6 +41,7 @@ pub(crate) fn generate_metadata_qr(
         Msg::LoadMetadata,
         sign,
         signing_key,
+        &encryption,
     )?;
     Ok(path)
 }
@@ -49,6 +51,7 @@ pub(crate) fn generate_spec_qr(
     target_dir: &Path,
     sign: bool,
     signing_key: String,
+    encryption: &Encryption,
 ) -> anyhow::Result<PathBuf> {
     let file_name =
         QrFileName::new(&specs.name.to_lowercase(), ContentType::Specs, sign).to_string();
@@ -62,6 +65,7 @@ pub(crate) fn generate_spec_qr(
         Msg::AddSpecs,
         sign,
         signing_key,
+        &encryption,
     )?;
     Ok(path)
 }
@@ -72,6 +76,7 @@ fn generate_qr<P>(
     msg_type: Msg,
     sign: bool,
     signing_key: String,
+    encryption: &Encryption,
 ) -> anyhow::Result<()>
 where
     P: AsRef<Path>,
@@ -84,23 +89,20 @@ where
     let files_dir = target_path.as_ref().parent().unwrap().to_path_buf();
 
     let make = if sign {
-        let sr25519_pair = match sr25519::Pair::from_string(signing_key.as_str(), None) {
-            Ok(x) => x,
-            Err(_e) => {
-                bail!("❌ Key error. Generate metadata with `make updater` and sign manually")
-            }
+        let signature_params = match encryption {
+          Encryption::Sr25519 => SR25519Sign{private_key: signing_key}.sign(content)?,
+          Encryption::Ethereum => EthereumSign{private_key: signing_key}.sign(content)?,
+          _ => bail!("Unsupported signature. Only SR25519 and Ethereum are supported"),
         };
-        let signature = sr25519_pair.sign(content);
-
         Make {
             goal: Goal::Qr,
             verifier: Verifier {
                 verifier_alice: None,
-                verifier_hex: Some(to_hex(sr25519_pair.public().to_raw_vec().as_slice(), true)),
+                verifier_hex: Some(signature_params.0),
                 verifier_file: None,
             },
             signature: Signature {
-                signature_hex: Some(serde_json::to_string(&signature).unwrap().replace('"', "")),
+                signature_hex: Some(signature_params.1),
                 signature_file: None,
             },
             sufficient: Sufficient {
@@ -112,7 +114,7 @@ where
             files_dir: files_dir.clone(),
             payload: tmp_f_path,
             export_dir: files_dir,
-            crypto: Some(Encryption::Sr25519),
+            crypto: Some(signature_params.2),
         }
     } else {
         Make {
@@ -139,4 +141,44 @@ where
         }
     };
     full_run(SignerCommand::Make(make)).map_err(|e| anyhow!("{:?}", e))
+}
+
+trait Signer {
+  /// Return the information needed for the signing
+  /// Should return 1. public key, 2. signature, 3. encryption type
+  fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)>;
+}
+
+struct EthereumSign {
+  private_key: String
+}
+
+struct SR25519Sign {
+  private_key: String
+}
+
+impl Signer for EthereumSign {
+  fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)> {
+    let key_pair = match ecdsa::Pair::from_string(&self.private_key.as_str(), None) {
+      Ok(x) => x,
+      Err(_e) => {
+        bail!("❌ Key error. Generate metadata with `make updater` and sign manually");
+      }
+    };
+    let signature = key_pair.sign(content);
+    Ok((to_hex(&key_pair.public().0.to_vec(), false), hex::encode(signature.0), Encryption::Ethereum))
+  }
+}
+
+impl Signer for SR25519Sign {
+  fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)> {
+    let key_pair = match sr25519::Pair::from_string(&self.private_key.as_str(), None) {
+      Ok(x) => x,
+        Err(_e) => {
+          bail!("❌ Key error. Generate metadata with `make updater` and sign manually")
+        }
+    };
+    let signature = key_pair.sign(content);
+    Ok((to_hex(&key_pair.public().0.to_vec(), true), hex::encode(signature.0), Encryption::Sr25519))
+  }
 }

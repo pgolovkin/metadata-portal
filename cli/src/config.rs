@@ -109,6 +109,7 @@ impl AppConfig {
 pub(crate) struct Verifier {
     pub(crate) name: String,
     pub(crate) public_key: String,
+    pub(crate) ethereum_public_key: String,
 }
 
 #[cfg(test)]
@@ -117,6 +118,7 @@ impl Default for Verifier {
         Self {
             name: "Test Verifier".to_string(),
             public_key: "123".to_string(),
+            ethereum_public_key: "321".to_string(),
         }
     }
 }
@@ -142,6 +144,7 @@ pub(crate) struct Chain {
     pub(crate) token_decimals: Option<u8>,
     pub(crate) github_release: Option<GithubRepo>,
     pub(crate) testnet: Option<bool>,
+    pub(crate) encryption: Option<String>,
 }
 
 fn color_default() -> String {
@@ -161,6 +164,7 @@ impl Default for Chain {
             token_decimals: None,
             github_release: None,
             testnet: Some(false),
+            encryption: None,
         }
     }
 }

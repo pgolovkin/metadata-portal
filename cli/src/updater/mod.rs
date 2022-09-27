@@ -12,6 +12,7 @@ use sp_core::H256;
 
 use crate::config::AppConfig;
 use crate::fetch::Fetcher;
+use crate::lib::types::get_crypto;
 use crate::qrs::{find_metadata_qrs, find_spec_qrs};
 use crate::source::{save_source_info, Source};
 use crate::updater::generate::{generate_metadata_qr, generate_spec_qr};
@@ -29,6 +30,7 @@ pub(crate) fn update_from_node(
     let mut is_changed = false;
     let mut error_fetching_data = false;
     for chain in config.chains {
+        let encryption = get_crypto(&chain);
         if !specs_qrs.contains_key(chain.name.as_str()) {
             let specs_res = fetcher.fetch_specs(&chain);
             if specs_res.is_err() {
@@ -45,6 +47,7 @@ pub(crate) fn update_from_node(
                 &config.qr_dir,
                 sign,
                 signing_key.to_owned(),
+                &encryption,
             )?;
             is_changed = true;
         }
@@ -74,6 +77,7 @@ pub(crate) fn update_from_node(
             &config.qr_dir,
             sign,
             signing_key.to_owned(),
+            &encryption,
         )?;
         let source = Source::Rpc {
             block: fetched_meta.block_hash,
@@ -108,7 +112,7 @@ pub(crate) async fn update_from_github(
             continue;
         }
 
-        let github_repo = chain.github_release.unwrap();
+        let github_repo = chain.github_release.as_ref().unwrap();
         let wasm = fetch_latest_runtime(&github_repo, &chain.name).await?;
         if wasm.is_none() {
             warn!("🤨 No releases found");
@@ -128,12 +132,14 @@ pub(crate) async fn update_from_github(
         let wasm_bytes = download_wasm(wasm.to_owned()).await?;
         let meta_hash = blake2b(32, &[], &wasm_bytes).as_bytes().to_vec();
         let meta_values = meta_values_from_wasm_bytes(&wasm_bytes)?;
+        let encryption = get_crypto(&chain);
         let path = generate_metadata_qr(
             &meta_values,
             &genesis_hash,
             &config.qr_dir,
             sign,
             signing_key.to_owned(),
+            &encryption,
         )?;
         let source = Source::Wasm {
             github_repo: format!("{}/{}", github_repo.owner, github_repo.repo),
