@@ -273,6 +273,18 @@ ethereum_public_key = '031b195495f907908aeedd8e9a0ae128dcf23b6a7425dd16d282df7d8
   name = "mainnet"
   color = "#d622ff"
 
+  [chains.Kylin]
+  name = "kylin"
+  color = "#ed007e"
+
+  [chains.Darwinia]
+  name = "Darwinia Parachain"
+  color = "#FF0083"
+
+  [chains.Kapex]
+  name = "totem-parachain"
+  color = "linear-gradient(158deg, rgba(226,157,0,1) 0%, rgba(234,55,203,1) 100%)"
+
   # Test networks
   [chains.Westmint]
   name = "westmint"
@@ -293,7 +305,7 @@ ethereum_public_key = '031b195495f907908aeedd8e9a0ae128dcf23b6a7425dd16d282df7d8
   color = "#9EE844"
 
   [chains."Aleph Zero Testnet"]
-  name = " aleph-node"
+  name = "aleph-node"
   color = "#231764"
 
   [chains."Polymesh Testnet"]
