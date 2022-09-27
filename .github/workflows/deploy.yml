@@ -23,7 +23,17 @@ jobs:
 
       - name: ⚙ Run verifier
         id: verify
-        run: make verifier
+        uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: --release -- -c=config.toml verify
+
+      - name: ⚙ Run verifier dev
+        id: verify
+        uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: --release -- -c=config_dev.toml verify
 
       - name: ⚙ Run collector
         id: collect

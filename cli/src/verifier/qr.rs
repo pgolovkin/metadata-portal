@@ -1,8 +1,9 @@
 use std::path::Path;
 
 use anyhow::{anyhow, bail, ensure, Result};
+use definitions::crypto::Encryption;
 use definitions::error::TransferContent;
-use definitions::helpers::multisigner_to_public;
+use definitions::helpers::{multisigner_to_encryption, multisigner_to_public};
 use definitions::metadata::MetaValues;
 use definitions::network_specs::{Verifier, VerifierValue};
 use definitions::qr_transfers::ContentLoadMeta;
@@ -13,7 +14,7 @@ use crate::lib::camera::read_qr_file;
 use crate::lib::path::{ContentType, QrFileName, QrPath};
 use crate::qrs::qrs_in_dir;
 
-pub(crate) fn validate_signed_qrs(dir: impl AsRef<Path>, public_key: &str) -> Result<()> {
+pub(crate) fn validate_signed_qrs(dir: impl AsRef<Path>, public_key: &str, eth_public_key: &str) -> Result<()> {
     let all_qrs = qrs_in_dir(&dir)?;
     // Quick check that latest files are signed
     for qr in &all_qrs {
@@ -23,7 +24,7 @@ pub(crate) fn validate_signed_qrs(dir: impl AsRef<Path>, public_key: &str) -> Re
     for qr in &all_qrs {
         if let ContentType::Metadata(_) = qr.file_name.content_type {
             let f_name = &qr.file_name;
-            match validate_metadata_qr(qr, public_key) {
+            match validate_metadata_qr(qr, public_key, eth_public_key) {
                 Ok(_) => info!("🎉 {} is verified!", f_name),
                 Err(e) => bail!("failed to verify {}: {}", f_name, e),
             }
@@ -32,7 +33,7 @@ pub(crate) fn validate_signed_qrs(dir: impl AsRef<Path>, public_key: &str) -> Re
     Ok(())
 }
 
-fn validate_metadata_qr(qr_path: &QrPath, public_key: &str) -> Result<()> {
+fn validate_metadata_qr(qr_path: &QrPath, public_key: &str, eth_public_key: &str) -> Result<()> {
     ensure!(
         qr_path.file_name.is_signed,
         "{} is not signed",
@@ -42,8 +43,18 @@ fn validate_metadata_qr(qr_path: &QrPath, public_key: &str) -> Result<()> {
     let data_hex = read_qr_file(&qr_path.to_path_buf())?;
     let signed =
         pass_crypto(&data_hex, TransferContent::LoadMeta).map_err(|e| anyhow!("{:?}", e))?;
-
-    verify_signature(&signed.verifier, public_key)?;
+    let encryption = match &signed.verifier.v {
+      Some(VerifierValue::Standard { m }) => multisigner_to_encryption(&m),
+      _ => bail!("unable to get verifier key from qr file: {:?}", &signed.verifier),
+    };
+    verify_signature(
+      &signed.verifier,
+      match encryption {
+        Encryption::Sr25519 => public_key,
+        Encryption::Ethereum | Encryption::Ecdsa => eth_public_key,
+        _ => bail!("unsupported verifier type: {:?}", &signed.verifier)
+      }
+    )?;
 
     let (meta, _) = ContentLoadMeta::from_slice(&signed.message)
         .meta_genhash()

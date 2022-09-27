@@ -12,7 +12,6 @@ use generate_message::parser::{
     Command as SignerCommand, Goal, Make, Msg, Signature, Sufficient, Verifier,
 };
 use log::info;
-use sp_core::bytes::to_hex;
 use sp_core::{sr25519, Pair, H256, ecdsa};
 
 use crate::lib::path::{ContentType, QrFileName};
@@ -166,7 +165,7 @@ impl Signer for EthereumSign {
       }
     };
     let signature = key_pair.sign(content);
-    Ok((to_hex(&key_pair.public().0.to_vec(), false), hex::encode(signature.0), Encryption::Ethereum))
+    Ok((hex::encode(&key_pair.public().0), hex::encode(signature.0), Encryption::Ethereum))
   }
 }
 
@@ -179,6 +178,6 @@ impl Signer for SR25519Sign {
         }
     };
     let signature = key_pair.sign(content);
-    Ok((to_hex(&key_pair.public().0.to_vec(), true), hex::encode(signature.0), Encryption::Sr25519))
+    Ok((hex::encode(&key_pair.public().0), hex::encode(signature.0), Encryption::Sr25519))
   }
 }

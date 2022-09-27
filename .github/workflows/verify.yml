@@ -27,4 +27,10 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: run
-          args: --release -- verify
+          args: --release -- -c=config.toml verify
+
+      - name: ⚙ Run verifier dev
+        uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: --release -- -c=config_dev.toml verify
