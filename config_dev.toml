@@ -559,14 +559,6 @@ rpc_endpoints = [
 testnet = false
 
 [[chains]]
-name = ' aleph-node'
-title = 'Aleph Zero Testnet'
-color = '#231764'
-icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/AlephZero_Testnet.svg'
-rpc_endpoints = ['wss://ws.test.azero.dev']
-testnet = true
-
-[[chains]]
 name = 'moonbase relay testnet'
 title = 'Moonbase Relay Testnet'
 color = '#1AC860'
