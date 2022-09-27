@@ -48,7 +48,7 @@ fn validate_metadata_qr(qr_path: &QrPath, public_key: &str, eth_public_key: &str
     let signed =
         pass_crypto(&data_hex, TransferContent::LoadMeta).map_err(|e| anyhow!("{:?}", e))?;
     let encryption = match &signed.verifier.v {
-        Some(VerifierValue::Standard { m }) => multisigner_to_encryption(&m),
+        Some(VerifierValue::Standard { m }) => multisigner_to_encryption(m),
         _ => bail!(
             "unable to get verifier key from qr file: {:?}",
             &signed.verifier

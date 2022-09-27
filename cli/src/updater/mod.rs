@@ -113,7 +113,7 @@ pub(crate) async fn update_from_github(
         }
 
         let github_repo = chain.github_release.as_ref().unwrap();
-        let wasm = fetch_latest_runtime(&github_repo, &chain.name).await?;
+        let wasm = fetch_latest_runtime(github_repo, &chain.name).await?;
         if wasm.is_none() {
             warn!("🤨 No releases found");
             continue;

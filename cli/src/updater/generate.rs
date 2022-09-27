@@ -40,7 +40,7 @@ pub(crate) fn generate_metadata_qr(
         Msg::LoadMetadata,
         sign,
         signing_key,
-        &encryption,
+        encryption,
     )?;
     Ok(path)
 }
@@ -64,7 +64,7 @@ pub(crate) fn generate_spec_qr(
         Msg::AddSpecs,
         sign,
         signing_key,
-        &encryption,
+        encryption,
     )?;
     Ok(path)
 }
@@ -164,7 +164,7 @@ struct SR25519Sign {
 
 impl Signer for EthereumSign {
     fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)> {
-        let key_pair = match ecdsa::Pair::from_string(&self.private_key.as_str(), None) {
+        let key_pair = match ecdsa::Pair::from_string(self.private_key.as_str(), None) {
             Ok(x) => x,
             Err(_e) => {
                 bail!("❌ Key error. Generate metadata with `make updater` and sign manually");
@@ -181,7 +181,7 @@ impl Signer for EthereumSign {
 
 impl Signer for SR25519Sign {
     fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)> {
-        let key_pair = match sr25519::Pair::from_string(&self.private_key.as_str(), None) {
+        let key_pair = match sr25519::Pair::from_string(self.private_key.as_str(), None) {
             Ok(x) => x,
             Err(_e) => {
                 bail!("❌ Key error. Generate metadata with `make updater` and sign manually")

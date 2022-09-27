@@ -39,7 +39,7 @@ impl Fetcher for RpcFetcher {
                 },
             );
 
-            specs_agnostic(url, get_crypto(&chain), optional_token_override, None)
+            specs_agnostic(url, get_crypto(chain), optional_token_override, None)
         })
         .map_err(|e| anyhow!("{:?}", e))?;
         if specs.name.to_lowercase() != chain.name {
