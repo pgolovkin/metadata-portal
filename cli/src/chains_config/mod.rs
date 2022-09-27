@@ -43,7 +43,7 @@ const EXCLUDE_CHAINS: [&str; 5] = [
     "Kusama",
     "Westend",
     "Arctic Relay Testnet",
-    "Aleph Zero Testnet" //TODO name matches with mainnet and will override it
+    "Aleph Zero Testnet", //TODO name matches with mainnet and will override it
 ];
 
 pub(crate) fn update_chains_config(chains_opts: ChainsOpts) -> Result<()> {

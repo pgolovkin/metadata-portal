@@ -14,7 +14,11 @@ use crate::lib::camera::read_qr_file;
 use crate::lib::path::{ContentType, QrFileName, QrPath};
 use crate::qrs::qrs_in_dir;
 
-pub(crate) fn validate_signed_qrs(dir: impl AsRef<Path>, public_key: &str, eth_public_key: &str) -> Result<()> {
+pub(crate) fn validate_signed_qrs(
+    dir: impl AsRef<Path>,
+    public_key: &str,
+    eth_public_key: &str,
+) -> Result<()> {
     let all_qrs = qrs_in_dir(&dir)?;
     // Quick check that latest files are signed
     for qr in &all_qrs {
@@ -44,16 +48,19 @@ fn validate_metadata_qr(qr_path: &QrPath, public_key: &str, eth_public_key: &str
     let signed =
         pass_crypto(&data_hex, TransferContent::LoadMeta).map_err(|e| anyhow!("{:?}", e))?;
     let encryption = match &signed.verifier.v {
-      Some(VerifierValue::Standard { m }) => multisigner_to_encryption(&m),
-      _ => bail!("unable to get verifier key from qr file: {:?}", &signed.verifier),
+        Some(VerifierValue::Standard { m }) => multisigner_to_encryption(&m),
+        _ => bail!(
+            "unable to get verifier key from qr file: {:?}",
+            &signed.verifier
+        ),
     };
     verify_signature(
-      &signed.verifier,
-      match encryption {
-        Encryption::Sr25519 => public_key,
-        Encryption::Ethereum | Encryption::Ecdsa => eth_public_key,
-        _ => bail!("unsupported verifier type: {:?}", &signed.verifier)
-      }
+        &signed.verifier,
+        match encryption {
+            Encryption::Sr25519 => public_key,
+            Encryption::Ethereum | Encryption::Ecdsa => eth_public_key,
+            _ => bail!("unsupported verifier type: {:?}", &signed.verifier),
+        },
     )?;
 
     let (meta, _) = ContentLoadMeta::from_slice(&signed.message)
