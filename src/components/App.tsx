@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Chains } from "../scheme";
 import { useLocation } from "react-router-dom";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -23,7 +23,7 @@ export enum ChainsMode {
   prod,
 }
 
-export default function App({mode}: Props) {
+export default function App({ mode }: Props) {
   const [localStorageNetwork, setLocalStorageNetwork] =
     useLocalStorage("chosenNetwork");
   const [isOpen, setIsOpen] = useState<boolean>(false);
