@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import { Chains } from "../scheme";
 import { useLocation } from "react-router-dom";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -14,15 +14,24 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function App() {
+interface Props {
+  mode: ChainsMode;
+}
+
+export enum ChainsMode {
+  dev,
+  prod,
+}
+
+export default function App({mode}: Props) {
   const [localStorageNetwork, setLocalStorageNetwork] =
     useLocalStorage("chosenNetwork");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [allChains, setAllChains] = useState<Chains>({} as Chains);
   let dataFileName = "data.json";
-  if (useLocation().pathname.split("/").indexOf("dev") > 0) {
-    dataFileName = "data_dev.json";
+  if (mode == ChainsMode.dev) {
+    dataFileName = "../data_dev.json";
   }
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +39,7 @@ export default function App() {
         .then((response) => response.json())
         .catch((e) => {
           console.error(
-            "Unable to fetch data file. Run `make collector` to generate it"
+            `Unable to fetch data file ${dataFileName}. Run 'make collector' to generate it`
           );
           return e;
         });
