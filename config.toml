@@ -557,7 +557,7 @@ name = 'amplitude'
 title = 'Amplitude'
 color = '#5defa7'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Amplitude.svg'
-rpc_endpoints = ['wss://pencol-kus-01.pendulumchain.tech']
+rpc_endpoints = ['wss://rpc.pendulumchain.tech']
 testnet = false
 
 [[chains]]
@@ -593,4 +593,12 @@ title = 'Kapex'
 color = 'linear-gradient(158deg, rgba(226,157,0,1) 0%, rgba(234,55,203,1) 100%)'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Totem.svg'
 rpc_endpoints = ['wss://k-ui.kapex.network']
+testnet = false
+
+[[chains]]
+name = 'polymesh_mainnet'
+title = 'Polymesh'
+color = '#1348e4'
+icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Polymesh.svg'
+rpc_endpoints = ['wss://mainnet-rpc.polymesh.network']
 testnet = false

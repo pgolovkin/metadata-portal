@@ -344,6 +344,10 @@ ethereum_public_key = '031b195495f907908aeedd8e9a0ae128dcf23b6a7425dd16d282df7d8
   name = "polymesh_mainnet"
   color = "#1348e4"
 
+  [chains."Polymesh"]
+  name = "polymesh_mainnet"
+  color = "#1348e4"
+
   [chains."Beresheet"]
   name = "Beresheet_v46"
   color = "#111111"
