@@ -1,3 +1,5 @@
+use std::{thread, time};
+
 use anyhow::{anyhow, bail, Result};
 use definitions::network_specs::NetworkSpecsToSend;
 use generate_message::helpers::{meta_fetch, specs_agnostic, MetaFetched};
@@ -13,18 +15,21 @@ pub(crate) trait Fetcher {
 }
 
 // try to call all urls unless successful
-fn call_urls<F, T>(urls: &[String], f: F) -> Result<T, generate_message::Error>
+fn call_urls<F, T>(urls: &[String], f: F) -> Result<T>
 where
     F: Fn(&str) -> Result<T, generate_message::Error>,
 {
-    let n = urls.len();
-    for url in urls.iter().take(n - 1) {
-        match f(url) {
-            Ok(res) => return Ok(res),
-            Err(e) => warn!("Failed to fetch {}: {:?}", url, e),
+    for url in urls.iter() {
+        for i in 1..7 {
+            match f(url) {
+                Ok(res) => return Ok(res),
+                Err(e) => warn!("Failed to fetch {}: {:?}", url, e),
+            }
+            let interval_seconds = time::Duration::from_secs(5 * i);
+            thread::sleep(interval_seconds);
         }
     }
-    f(&urls[n - 1])
+    bail!("Error calling chain node");
 }
 
 pub(crate) struct RpcFetcher;

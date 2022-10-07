@@ -1,6 +1,6 @@
 data_file = 'public/data_dev.json'
 public_dir = 'public'
-qr_dir = 'public/qr'
+qr_dir = 'public/qr_dev'
 
 [verifier]
 name = 'Novasama Technologies'
@@ -60,12 +60,13 @@ title = 'Moonbase Alpha'
 color = '#F45B5B'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Moonbase_Alpha_Testnet.svg'
 rpc_endpoints = [
-    'wss://rpc.pinknode.io/alphanet/explorer',
-    'wss://moonbeam-alpha.api.onfinality.io/public-ws',
-    'wss://wss.testnet.moonbeam.network',
+    'wss://karura-rpc.dwellir.com',
+    'wss://karura-rpc-0.aca-api.network',
+    'wss://karura-rpc-1.aca-api.network',
+    'wss://karura-rpc-2.aca-api.network/ws',
+    'wss://karura-rpc-3.aca-api.network/ws',
 ]
-testnet = true
-encryption = 'ethereum'
+testnet = false
 
 [[chains]]
 name = 'shiden'
@@ -98,17 +99,6 @@ title = 'Kintsugi'
 color = '#1a0a2d'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Kintsugi.svg'
 rpc_endpoints = ['wss://api-kusama.interlay.io/parachain']
-testnet = false
-
-[[chains]]
-name = 'edgeware'
-title = 'Edgeware'
-color = '#111111'
-icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Edgeware.svg'
-rpc_endpoints = [
-    'wss://mainnet.edgewa.re',
-    'wss://edgeware.api.onfinality.io/public-ws',
-]
 testnet = false
 
 [[chains]]
@@ -218,7 +208,6 @@ rpc_endpoints = [
     'wss://acala-rpc-2.aca-api.network/ws',
     'wss://acala-rpc-3.aca-api.network/ws',
     'wss://acala.polkawallet.io',
-    'wss://acala-polkadot.api.onfinality.io/public-ws',
 ]
 testnet = false
 
@@ -334,17 +323,6 @@ rpc_endpoints = [
     'wss://zeitgeist-rpc.dwellir.com',
     'wss://rpc-0.zeitgeist.pm',
     'wss://zeitgeist.api.onfinality.io/public-ws',
-]
-testnet = false
-
-[[chains]]
-name = 'KICO'
-title = 'KICO'
-color = '#29B58D'
-icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/KICO.svg'
-rpc_endpoints = [
-    'wss://rpc.kico.dico.io',
-    'wss://rpc.api.kico.dico.io',
 ]
 testnet = false
 
@@ -479,17 +457,6 @@ title = 'Aleph Zero'
 color = '#00CCAB'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/AlephZero.svg'
 rpc_endpoints = ['wss://ws.azero.dev']
-testnet = false
-
-[[chains]]
-name = 'composable-finance'
-title = 'Composable Finance'
-color = '#C90E8A'
-icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Composable.png'
-rpc_endpoints = [
-    'wss://rpc.composable.finance',
-    'wss://composable-rpc.dwellir.com',
-]
 testnet = false
 
 [[chains]]

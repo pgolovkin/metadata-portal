@@ -24,7 +24,13 @@ name = 'karura'
 title = 'Karura'
 color = '#ff4c3b'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Karura.svg'
-rpc_endpoints = ['wss://karura.api.onfinality.io/public-ws']
+rpc_endpoints = [
+    'wss://karura-rpc.dwellir.com',
+    'wss://karura-rpc-0.aca-api.network',
+    'wss://karura-rpc-1.aca-api.network',
+    'wss://karura-rpc-2.aca-api.network/ws',
+    'wss://karura-rpc-3.aca-api.network/ws',
+]
 testnet = false
 
 [[chains]]
@@ -99,6 +105,7 @@ icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/ch
 rpc_endpoints = [
     'wss://fullnode.altair.centrifuge.io',
     'wss://altair.api.onfinality.io/public-ws',
+    'wss://altair-rpc.dwellir.com',
 ]
 testnet = false
 
@@ -114,17 +121,6 @@ rpc_endpoints = [
 testnet = false
 
 [[chains]]
-name = 'edgeware'
-title = 'Edgeware'
-color = '#111111'
-icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Edgeware.svg'
-rpc_endpoints = [
-    'wss://mainnet.edgewa.re',
-    'wss://edgeware.api.onfinality.io/public-ws',
-]
-testnet = false
-
-[[chains]]
 name = 'khala'
 title = 'Khala'
 color = '#03f3f3'
@@ -132,6 +128,7 @@ icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/ch
 rpc_endpoints = [
     'wss://khala-api.phala.network/ws',
     'wss://khala.api.onfinality.io/public-ws',
+    'wss://khala-rpc.dwellir.com',
 ]
 testnet = false
 
@@ -182,11 +179,11 @@ color = '#645AFF'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Acala.svg'
 rpc_endpoints = [
     'wss://acala-rpc.dwellir.com',
+    'wss://acala-rpc-0.aca-api.network',
     'wss://acala-rpc-1.aca-api.network',
     'wss://acala-rpc-2.aca-api.network/ws',
     'wss://acala-rpc-3.aca-api.network/ws',
     'wss://acala.polkawallet.io',
-    'wss://acala-polkadot.api.onfinality.io/public-ws',
 ]
 testnet = false
 
@@ -240,7 +237,10 @@ name = 'robonomics'
 title = 'Robonomics'
 color = '#2949d3'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Robonomics.svg'
-rpc_endpoints = ['wss://kusama.rpc.robonomics.network/']
+rpc_endpoints = [
+    'wss://kusama.rpc.robonomics.network/',
+    'wss://robonomics-rpc.dwellir.com',
+]
 testnet = false
 
 [[chains]]
@@ -259,7 +259,10 @@ name = 'kintsugi-parachain'
 title = 'Kintsugi'
 color = '#1a0a2d'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Kintsugi.svg'
-rpc_endpoints = ['wss://api-kusama.interlay.io/parachain']
+rpc_endpoints = [
+    'wss://api-kusama.interlay.io/parachain',
+    'wss://kintsugi-rpc.dwellir.com',
+]
 testnet = false
 
 [[chains]]
@@ -283,17 +286,6 @@ rpc_endpoints = [
 testnet = false
 
 [[chains]]
-name = 'KICO'
-title = 'KICO'
-color = '#29B58D'
-icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/KICO.svg'
-rpc_endpoints = [
-    'wss://rpc.kico.dico.io',
-    'wss://rpc.api.kico.dico.io',
-]
-testnet = false
-
-[[chains]]
 name = 'litmus-parachain'
 title = 'Litmus'
 color = '#6822fb'
@@ -306,7 +298,10 @@ name = 'Crab Parachain'
 title = 'Crab'
 color = '#7C30DD'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Crab.svg'
-rpc_endpoints = ['wss://crab-parachain-rpc.darwinia.network/']
+rpc_endpoints = [
+    'wss://crab-parachain-rpc.darwinia.network/',
+    'wss://darwiniacrab-rpc.dwellir.com',
+]
 testnet = false
 
 [[chains]]
@@ -336,6 +331,7 @@ icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/ch
 rpc_endpoints = [
     'wss://integritee-kusama.api.onfinality.io/public-ws',
     'wss://kusama.api.integritee.network',
+    'wss://integritee-ksm-rpc.dwellir.com',
 ]
 testnet = false
 
@@ -344,7 +340,10 @@ name = 'centrifuge'
 title = 'Centrifuge Parachain'
 color = '#fcc367'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Centrifuge.svg'
-rpc_endpoints = ['wss://fullnode.parachain.centrifuge.io']
+rpc_endpoints = [
+    'wss://fullnode.parachain.centrifuge.io',
+    'wss://centrifuge-rpc.dwellir.com',
+]
 testnet = false
 
 [[chains]]
@@ -352,7 +351,10 @@ name = 'efinity'
 title = 'Efinity'
 color = '#496ddb'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Efinity.svg'
-rpc_endpoints = ['wss://rpc.efinity.io']
+rpc_endpoints = [
+    'wss://rpc.efinity.io',
+    'wss://efinity-rpc.dwellir.com',
+]
 testnet = false
 
 [[chains]]
@@ -416,17 +418,6 @@ rpc_endpoints = ['wss://ws.azero.dev']
 testnet = false
 
 [[chains]]
-name = 'composable-finance'
-title = 'Composable Finance'
-color = '#C90E8A'
-icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Composable.png'
-rpc_endpoints = [
-    'wss://rpc.composable.finance',
-    'wss://composable-rpc.dwellir.com',
-]
-testnet = false
-
-[[chains]]
 name = 'node'
 title = 'Polkadex Solochain'
 color = '#7C30DD'
@@ -458,7 +449,10 @@ name = 'litentry-parachain'
 title = 'Litentry'
 color = 'linear-gradient(45deg, #5cc27c 0%, #6de98f 100%)'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Litentry.svg'
-rpc_endpoints = ['wss://rpc.litentry-parachain.litentry.io']
+rpc_endpoints = [
+    'wss://rpc.litentry-parachain.litentry.io',
+    'wss://litentry-rpc.dwellir.com',
+]
 testnet = false
 
 [[chains]]
@@ -524,7 +518,10 @@ name = 'bajun'
 title = 'Bajun'
 color = '#161212'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Bajun.svg'
-rpc_endpoints = ['wss://rpc-parachain.bajun.network']
+rpc_endpoints = [
+    'wss://rpc-parachain.bajun.network',
+    'wss://bajun-rpc.dwellir.com',
+]
 testnet = false
 
 [[chains]]
@@ -569,4 +566,31 @@ title = 'Ternoa'
 color = '#d622ff'
 icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Ternoa.svg'
 rpc_endpoints = ['wss://mainnet.ternoa.network']
+testnet = false
+
+[[chains]]
+name = 'kylin'
+title = 'Kylin'
+color = '#ed007e'
+icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Kylin.svg'
+rpc_endpoints = ['wss://polkadot.kylin-node.co.uk']
+testnet = false
+
+[[chains]]
+name = 'Darwinia Parachain'
+title = 'Darwinia'
+color = '#FF0083'
+icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Darwinia.svg'
+rpc_endpoints = [
+    'wss://parachain-rpc.darwinia.network',
+    'wss://darwinia-rpc.dwellir.com',
+]
+testnet = false
+
+[[chains]]
+name = 'totem-parachain'
+title = 'Kapex'
+color = 'linear-gradient(158deg, rgba(226,157,0,1) 0%, rgba(234,55,203,1) 100%)'
+icon = 'https://raw.githubusercontent.com/nova-wallet/nova-utils/master/icons/chains/gradient/Totem.svg'
+rpc_endpoints = ['wss://k-ui.kapex.network']
 testnet = false
