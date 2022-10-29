@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{anyhow, bail};
 use definitions::crypto::Encryption;
 use definitions::metadata::MetaValues;
-use definitions::network_specs::NetworkSpecsToSend;
+use definitions::network_specs::NetworkSpecs;
 use definitions::qr_transfers::{ContentAddSpecs, ContentLoadMeta};
 use generate_message::full_run;
 use generate_message::parser::{
@@ -46,7 +46,7 @@ pub(crate) fn generate_metadata_qr(
 }
 
 pub(crate) fn generate_spec_qr(
-    specs: &NetworkSpecsToSend,
+    specs: &NetworkSpecs,
     target_dir: &Path,
     sign: bool,
     signing_key: String,

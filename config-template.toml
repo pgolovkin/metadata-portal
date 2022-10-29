@@ -4,6 +4,7 @@ qr_dir = "public/qr"
 [verifier]
 name = "Novasama Technologies"
 public_key = "16d5a6266345874d8f5b7f88a6619711b2829b52b2865826b1ecefb62beef34f"
+ethereum_public_key = '031b195495f907908aeedd8e9a0ae128dcf23b6a7425dd16d282df7d867855e7f1'
 
 [chains]
   [chains.Acala]
@@ -42,7 +43,7 @@ public_key = "16d5a6266345874d8f5b7f88a6619711b2829b52b2865826b1ecefb62beef34f"
   title = "Khala"
   color = "#03f3f3"
 
-  [chains."KILT Spiritnet"]
+  [chains."KILT"]
   name = "kilt-spiritnet"
   title = "KILT Spiritnet"
   color = "#8c145a"
