@@ -374,16 +374,6 @@ dependencies = [
 
 [[package]]
 name = "clang"
-version = "1.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34c6913be3a1c94f52fb975cdec7ef5a7b69de10a55de66dcbc30d7046b85fa1"
-dependencies = [
- "clang-sys",
- "libc",
-]
-
-[[package]]
-name = "clang"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "84c044c781163c001b913cd018fc95a628c50d0d2dfea8bca77dad71edb16e37"
@@ -1895,7 +1885,7 @@ dependencies = [
  "indicatif",
  "log",
  "octocrab",
- "opencv 0.65.0",
+ "opencv",
  "parity-scale-codec",
  "png",
  "qr_reader_pc",
@@ -2143,58 +2133,22 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
 name = "opencv"
-version = "0.65.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2f347324e04b3681daa19e32969c47ca7789e064bb8ed9f2b4c1843bb642486a"
-dependencies = [
- "cc",
- "clang 1.0.3",
- "dunce",
- "glob",
- "jobserver",
- "libc",
- "num-traits",
- "once_cell",
- "opencv-binding-generator 0.44.0",
- "pkg-config",
- "semver",
- "shlex",
- "vcpkg",
-]
-
-[[package]]
-name = "opencv"
 version = "0.71.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "71544bbb94c3160d8596b0856ec8a276986cda507b764f0f8002fe4fe4160a20"
 dependencies = [
  "cc",
- "clang 2.0.0",
+ "clang",
  "dunce",
  "jobserver",
  "libc",
  "num-traits",
  "once_cell",
- "opencv-binding-generator 0.49.0",
+ "opencv-binding-generator",
  "pkg-config",
  "semver",
  "shlex",
  "vcpkg",
-]
-
-[[package]]
-name = "opencv-binding-generator"
-version = "0.44.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5478fdcadbdc932d971d904a0bdcfd9b160abef7e8a10190b5170a1294804a75"
-dependencies = [
- "clang 1.0.3",
- "clang-sys",
- "dunce",
- "maplit",
- "once_cell",
- "percent-encoding",
- "regex",
 ]
 
 [[package]]
@@ -2203,7 +2157,7 @@ version = "0.49.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3001716b89afc895445a6b17f833e89fc014a96179583aba26fb0561a7b33f60"
 dependencies = [
- "clang 2.0.0",
+ "clang",
  "clang-sys",
  "dunce",
  "maplit",
@@ -2628,7 +2582,7 @@ dependencies = [
  "hex",
  "image",
  "indicatif",
- "opencv 0.71.0",
+ "opencv",
  "qr_reader_phone",
  "quircs",
 ]
