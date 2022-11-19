@@ -1,20 +1,20 @@
 use std::fs::File;
-use std::io::Write;
+use std::io::{copy, Cursor, Write};
 use std::path::{Path, PathBuf};
 
 use anyhow::{anyhow, bail};
 use definitions::crypto::Encryption;
 use definitions::metadata::MetaValues;
-use definitions::network_specs::NetworkSpecsToSend;
+use definitions::network_specs::NetworkSpecs;
 use definitions::qr_transfers::{ContentAddSpecs, ContentLoadMeta};
 use generate_message::full_run;
 use generate_message::parser::{
     Command as SignerCommand, Goal, Make, Msg, Signature, Sufficient, Verifier,
 };
 use log::info;
-use sp_core::{sr25519, Pair, H256, ecdsa};
+use sp_core::{ecdsa, sr25519, Pair, H256};
 
-use crate::lib::path::{ContentType, QrFileName};
+use crate::utils::path::{ContentType, QrFileName};
 
 pub(crate) fn generate_metadata_qr(
     meta_values: &MetaValues,
@@ -40,13 +40,33 @@ pub(crate) fn generate_metadata_qr(
         Msg::LoadMetadata,
         sign,
         signing_key,
-        &encryption,
+        encryption,
     )?;
     Ok(path)
 }
 
+pub(crate) fn download_metadata_qr(
+    url: &str,
+    meta_values: &MetaValues,
+    target_dir: &Path,
+) -> anyhow::Result<PathBuf> {
+    let file_name = QrFileName::new(
+        &meta_values.name.to_lowercase(),
+        ContentType::Metadata(meta_values.version),
+        true,
+    )
+    .to_string();
+    let path = target_dir.join(&file_name);
+    let url = format!("{}/{}", url, &file_name);
+    let response = reqwest::blocking::get(url).unwrap();
+    let mut content = Cursor::new(response.bytes().unwrap());
+    let mut file = File::create(&path)?;
+    copy(&mut content, &mut file)?;
+    Ok(path)
+}
+
 pub(crate) fn generate_spec_qr(
-    specs: &NetworkSpecsToSend,
+    specs: &NetworkSpecs,
     target_dir: &Path,
     sign: bool,
     signing_key: String,
@@ -64,7 +84,7 @@ pub(crate) fn generate_spec_qr(
         Msg::AddSpecs,
         sign,
         signing_key,
-        &encryption,
+        encryption,
     )?;
     Ok(path)
 }
@@ -89,9 +109,15 @@ where
 
     let make = if sign {
         let signature_params = match encryption {
-          Encryption::Sr25519 => SR25519Sign{private_key: signing_key}.sign(content)?,
-          Encryption::Ethereum => EthereumSign{private_key: signing_key}.sign(content)?,
-          _ => bail!("Unsupported signature. Only SR25519 and Ethereum are supported"),
+            Encryption::Sr25519 => SR25519Sign {
+                private_key: signing_key,
+            }
+            .sign(content)?,
+            Encryption::Ethereum => EthereumSign {
+                private_key: signing_key,
+            }
+            .sign(content)?,
+            _ => bail!("Unsupported signature. Only SR25519 and Ethereum are supported"),
         };
         Make {
             goal: Goal::Qr,
@@ -143,41 +169,49 @@ where
 }
 
 trait Signer {
-  /// Return the information needed for the signing
-  /// Should return 1. public key, 2. signature, 3. encryption type
-  fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)>;
+    /// Return the information needed for the signing
+    /// Should return 1. public key, 2. signature, 3. encryption type
+    fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)>;
 }
 
 struct EthereumSign {
-  private_key: String
+    private_key: String,
 }
 
 struct SR25519Sign {
-  private_key: String
+    private_key: String,
 }
 
 impl Signer for EthereumSign {
-  fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)> {
-    let key_pair = match ecdsa::Pair::from_string(&self.private_key.as_str(), None) {
-      Ok(x) => x,
-      Err(_e) => {
-        bail!("❌ Key error. Generate metadata with `make updater` and sign manually");
-      }
-    };
-    let signature = key_pair.sign(content);
-    Ok((hex::encode(&key_pair.public().0), hex::encode(signature.0), Encryption::Ethereum))
-  }
+    fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)> {
+        let key_pair = match ecdsa::Pair::from_string(self.private_key.as_str(), None) {
+            Ok(x) => x,
+            Err(_e) => {
+                bail!("❌ Key error. Generate metadata with `make updater` and sign manually");
+            }
+        };
+        let signature = key_pair.sign(content);
+        Ok((
+            hex::encode(&key_pair.public().0),
+            hex::encode(signature.0),
+            Encryption::Ethereum,
+        ))
+    }
 }
 
 impl Signer for SR25519Sign {
-  fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)> {
-    let key_pair = match sr25519::Pair::from_string(&self.private_key.as_str(), None) {
-      Ok(x) => x,
-        Err(_e) => {
-          bail!("❌ Key error. Generate metadata with `make updater` and sign manually")
-        }
-    };
-    let signature = key_pair.sign(content);
-    Ok((hex::encode(&key_pair.public().0), hex::encode(signature.0), Encryption::Sr25519))
-  }
+    fn sign(&self, content: &[u8]) -> anyhow::Result<(String, String, Encryption)> {
+        let key_pair = match sr25519::Pair::from_string(self.private_key.as_str(), None) {
+            Ok(x) => x,
+            Err(_e) => {
+                bail!("❌ Key error. Generate metadata with `make updater` and sign manually")
+            }
+        };
+        let signature = key_pair.sign(content);
+        Ok((
+            hex::encode(&key_pair.public().0),
+            hex::encode(signature.0),
+            Encryption::Sr25519,
+        ))
+    }
 }

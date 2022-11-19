@@ -12,12 +12,12 @@ use sp_core::H256;
 
 use crate::config::AppConfig;
 use crate::fetch::Fetcher;
-use crate::lib::types::get_crypto;
 use crate::qrs::{find_metadata_qrs, find_spec_qrs};
 use crate::source::{save_source_info, Source};
-use crate::updater::generate::{generate_metadata_qr, generate_spec_qr};
+use crate::updater::generate::{download_metadata_qr, generate_metadata_qr, generate_spec_qr};
 use crate::updater::github::fetch_latest_runtime;
 use crate::updater::wasm::{download_wasm, meta_values_from_wasm_bytes};
+use crate::utils::types::get_crypto;
 
 pub(crate) fn update_from_node(
     config: AppConfig,
@@ -42,13 +42,17 @@ pub(crate) fn update_from_node(
                 );
                 continue;
             }
-            generate_spec_qr(
-                &specs_res.unwrap(),
-                &config.qr_dir,
-                sign,
-                signing_key.to_owned(),
-                &encryption,
-            )?;
+            if chain.verifier == "parity" {
+                warn!("The chain {} should be added and signed by Parity, please check it on the Parity Metadata portal https://metadata.parity.io/", chain.name);
+            } else {
+                generate_spec_qr(
+                    &specs_res.unwrap(),
+                    &config.qr_dir,
+                    sign,
+                    signing_key.to_owned(),
+                    &encryption,
+                )?;
+            }
             is_changed = true;
         }
 
@@ -71,18 +75,26 @@ pub(crate) fn update_from_node(
                 continue;
             }
         }
-        let path = generate_metadata_qr(
-            &fetched_meta.meta_values,
-            &fetched_meta.genesis_hash,
-            &config.qr_dir,
-            sign,
-            signing_key.to_owned(),
-            &encryption,
-        )?;
-        let source = Source::Rpc {
-            block: fetched_meta.block_hash,
-        };
-        save_source_info(&path, &source)?;
+        if chain.verifier == "parity" {
+            download_metadata_qr(
+                "https://metadata.parity.io/qr",
+                &fetched_meta.meta_values,
+                &config.qr_dir,
+            )?;
+        } else {
+            let path = generate_metadata_qr(
+                &fetched_meta.meta_values,
+                &fetched_meta.genesis_hash,
+                &config.qr_dir,
+                sign,
+                signing_key.to_owned(),
+                &encryption,
+            )?;
+            let source = Source::Rpc {
+                block: fetched_meta.block_hash,
+            };
+            save_source_info(&path, &source)?;
+        }
         is_changed = true;
     }
 
@@ -113,7 +125,7 @@ pub(crate) async fn update_from_github(
         }
 
         let github_repo = chain.github_release.as_ref().unwrap();
-        let wasm = fetch_latest_runtime(&github_repo, &chain.name).await?;
+        let wasm = fetch_latest_runtime(github_repo, &chain.name).await?;
         if wasm.is_none() {
             warn!("🤨 No releases found");
             continue;

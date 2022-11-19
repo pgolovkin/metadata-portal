@@ -77,7 +77,7 @@ jobs:
       - name: ⚙ Run cleaner
         if: ${{ steps.collect.outputs.chainsSkipped == 'false' }}
         id: cleaner
-        run: cargo run --release -- -c=config.toml cleaner
+        run: cargo run --release clean
 
       - name: 📌 Commit changes if PR exists
         if: ${{ steps.checkout-pr.outputs.switched == 'true' }}
@@ -114,8 +114,7 @@ jobs:
           room_id: ${{ secrets.MATRIX_ROOM_ID }}
           access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
           server: ${{ secrets.MATRIX_SERVER }}
-          message: "# New metadata is available and signed! 📑
-[GitHub PR#${{ steps.cpr.outputs.pull-request-number }}](${{ steps.cpr.outputs.pull-request-url }})"
+          message: "# New metadata is available and signed! 📑 [GitHub PR#${{ steps.cpr.outputs.pull-request-number }}](${{ steps.cpr.outputs.pull-request-url }})"
 
       - name: Notify Telegram channel
         uses: appleboy/telegram-action@master

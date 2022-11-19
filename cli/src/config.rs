@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::{fmt, fs};
 
@@ -50,7 +51,7 @@ pub(crate) struct AppConfig {
     pub(crate) data_file: PathBuf,
     pub(crate) public_dir: PathBuf,
     pub(crate) qr_dir: PathBuf,
-    pub(crate) verifier: Verifier,
+    pub(crate) verifiers: HashMap<String, Verifier>,
     pub(crate) chains: Vec<Chain>,
 }
 #[derive(Serialize, Deserialize, Debug)]
@@ -69,11 +70,13 @@ pub(crate) struct ChainNode {
 #[cfg(test)]
 impl Default for AppConfig {
     fn default() -> Self {
+        let mut verifiers = HashMap::new();
+        verifiers.insert(String::from("novasama"), Verifier::default());
         Self {
             data_file: PathBuf::from("data.json"),
             public_dir: PathBuf::from("src/public"),
             qr_dir: PathBuf::from("qr"),
-            verifier: Verifier::default(),
+            verifiers,
             chains: vec![Chain::default()],
         }
     }
@@ -109,7 +112,7 @@ impl AppConfig {
 pub(crate) struct Verifier {
     pub(crate) name: String,
     pub(crate) public_key: String,
-    pub(crate) ethereum_public_key: String,
+    pub(crate) ethereum_public_key: Option<String>,
 }
 
 #[cfg(test)]
@@ -118,7 +121,7 @@ impl Default for Verifier {
         Self {
             name: "Test Verifier".to_string(),
             public_key: "123".to_string(),
-            ethereum_public_key: "321".to_string(),
+            ethereum_public_key: Some("321".to_string()),
         }
     }
 }
@@ -144,6 +147,7 @@ pub(crate) struct Chain {
     pub(crate) token_decimals: Option<u8>,
     pub(crate) github_release: Option<GithubRepo>,
     pub(crate) testnet: Option<bool>,
+    pub(crate) verifier: String,
     pub(crate) encryption: Option<String>,
 }
 
@@ -164,6 +168,7 @@ impl Default for Chain {
             token_decimals: None,
             github_release: None,
             testnet: Some(false),
+            verifier: String::from("novasama"),
             encryption: None,
         }
     }

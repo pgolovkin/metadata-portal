@@ -13,8 +13,7 @@ use crate::AppConfig;
 pub(crate) struct ConfigTemplate {
     pub(crate) data_file: Option<PathBuf>,
     pub(crate) public_dir: PathBuf,
-    pub(crate) qr_dir: PathBuf,
-    pub(crate) verifier: Verifier,
+    pub(crate) verifiers: HashMap<String, Verifier>,
     pub(crate) chains: HashMap<String, ChainTemplate>,
 }
 
@@ -22,6 +21,7 @@ pub(crate) struct ConfigTemplate {
 pub(crate) struct ChainTemplate {
     pub(crate) name: String,
     pub(crate) color: String,
+    pub(crate) verifier: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -39,16 +39,16 @@ pub(crate) struct ChainNode {
 }
 
 const EXCLUDE_CHAINS: [&str; 5] = [
-    "Polkadot",
-    "Kusama",
-    "Westend",
     "Arctic Relay Testnet",
-    "Aleph Zero Testnet" //TODO name matches with mainnet and will override it
+    "Aleph Zero Testnet", //TODO name matches with mainnet and will override it
+    "Edgeware",           //TODO (MetadataError(NoVersionInConstants))
+    "KICO",               //TODO Specs(Base58PrefixMismatch { specs: 51, meta: 42 })
+    "Composable Finance", //TODO  Specs(Base58PrefixMismatch { specs: 50, meta: 49 })
 ];
 
 pub(crate) fn update_chains_config(chains_opts: ChainsOpts) -> Result<()> {
     let template_path = Path::new("config-template.toml");
-    let config_template_toml = fs::read_to_string(&template_path)?;
+    let config_template_toml = fs::read_to_string(template_path)?;
     let config_template = toml::from_str::<ConfigTemplate>(config_template_toml.as_str())?;
 
     let chain_params = match chains_opts.env.as_str() {
@@ -59,6 +59,7 @@ pub(crate) fn update_chains_config(chains_opts: ChainsOpts) -> Result<()> {
                 "https://raw.githubusercontent.com/nova-wallet/nova-utils/master/chains/{}/{}",
                 chains_opts.version, "chains_dev.json"
             ),
+            "public/qr_dev",
         ),
         "prod" => (
             "config.toml",
@@ -67,6 +68,7 @@ pub(crate) fn update_chains_config(chains_opts: ChainsOpts) -> Result<()> {
                 "https://raw.githubusercontent.com/nova-wallet/nova-utils/master/chains/{}/{}",
                 chains_opts.version, "chains.json"
             ),
+            "public/qr",
         ),
         _ => bail!("Unknown env. Should be dev or prod"),
     };
@@ -95,6 +97,10 @@ pub(crate) fn update_chains_config(chains_opts: ChainsOpts) -> Result<()> {
                         Some(options) => Some(options.contains(&String::from("testnet"))),
                         None => Some(false),
                     },
+                    verifier: match &chain_template.verifier {
+                        Some(value) => String::from(value),
+                        None => String::from("novasama"),
+                    },
                     encryption: match &chain.options {
                         Some(options) => {
                             if options.contains(&String::from("ethereumBased")) {
@@ -114,8 +120,8 @@ pub(crate) fn update_chains_config(chains_opts: ChainsOpts) -> Result<()> {
     let new_config = AppConfig {
         data_file: PathBuf::from(chain_params.1),
         public_dir: config_template.public_dir,
-        qr_dir: config_template.qr_dir,
-        verifier: config_template.verifier,
+        qr_dir: PathBuf::from(chain_params.3),
+        verifiers: config_template.verifiers,
         chains,
     };
     let saved = new_config.save(Path::new(chain_params.0));

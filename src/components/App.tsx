@@ -19,8 +19,8 @@ interface Props {
 }
 
 export enum ChainsMode {
-  dev,
-  prod,
+  Dev,
+  Prod,
 }
 
 export default function App({ mode }: Props) {
@@ -29,10 +29,9 @@ export default function App({ mode }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [allChains, setAllChains] = useState<Chains>({} as Chains);
-  let dataFileName = "data.json";
-  if (mode == ChainsMode.dev) {
-    dataFileName = "../data_dev.json";
-  }
+  const dataFileName =
+    mode === ChainsMode.Dev ? "../data_dev.json" : "data.json";
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetch(dataFileName)
@@ -51,6 +50,7 @@ export default function App({ mode }: Props) {
         localStorageNetwork && localStorageNetwork.toLowerCase();
       const network =
         (Object.keys(r).includes(location) && location) ||
+        Object.keys(r).find((key) => r[key].genesisHash == location) ||
         (Object.keys(r).includes(lastVisited) && lastVisited) ||
         Object.keys(r)[0];
       setCurrentNetwork(network);
