@@ -76,7 +76,7 @@ fn validate_metadata_qr(
         .unwrap();
     let public_key = match encryption {
         Encryption::Sr25519 => &verifier.public_key,
-        Encryption::Ethereum | Encryption::Ecdsa => &verifier.ethereum_public_key.as_ref().unwrap(),
+        Encryption::Ethereum | Encryption::Ecdsa => verifier.ethereum_public_key.as_ref().unwrap(),
         _ => bail!("unsupported verifier type: {:?}", &signed.verifier),
     };
 
