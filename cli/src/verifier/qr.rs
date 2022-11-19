@@ -71,17 +71,16 @@ fn validate_metadata_qr(
         .map_err(|e| anyhow!("{:?}", e))?;
     let meta_values = MetaValues::from_slice_metadata(&meta).map_err(|e| anyhow!("{:?}", e))?;
 
-    let verifier = &chain_verifier_map.get(&meta_values.name.to_lowercase()).unwrap();
+    let verifier = &chain_verifier_map
+        .get(&meta_values.name.to_lowercase())
+        .unwrap();
     let public_key = match encryption {
-      Encryption::Sr25519 => &verifier.public_key,
-      Encryption::Ethereum | Encryption::Ecdsa => &verifier.ethereum_public_key.as_ref().unwrap(),
-      _ => bail!("unsupported verifier type: {:?}", &signed.verifier)
+        Encryption::Sr25519 => &verifier.public_key,
+        Encryption::Ethereum | Encryption::Ecdsa => &verifier.ethereum_public_key.as_ref().unwrap(),
+        _ => bail!("unsupported verifier type: {:?}", &signed.verifier),
     };
 
-  verify_signature(
-        &signed.verifier,
-        public_key,
-    )?;
+    verify_signature(&signed.verifier, public_key)?;
 
     verify_filename(&meta_values, &qr_path.file_name)?;
     Ok(())
