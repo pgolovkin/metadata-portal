@@ -192,7 +192,7 @@ impl Signer for EthereumSign {
         };
         let signature = key_pair.sign(content);
         Ok((
-            hex::encode(&key_pair.public().0),
+            hex::encode(key_pair.public().0),
             hex::encode(signature.0),
             Encryption::Ethereum,
         ))
@@ -209,7 +209,7 @@ impl Signer for SR25519Sign {
         };
         let signature = key_pair.sign(content);
         Ok((
-            hex::encode(&key_pair.public().0),
+            hex::encode(key_pair.public().0),
             hex::encode(signature.0),
             Encryption::Sr25519,
         ))
