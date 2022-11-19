@@ -49,7 +49,6 @@ fn validate_metadata_qr(
     qr_path: &QrPath,
     chain_verifier_map: &HashMap<String, &Verifier>,
 ) -> Result<()> {
-fn validate_metadata_qr(qr_path: &QrPath, public_key: &str, eth_public_key: &str) -> Result<()> {
     ensure!(
         qr_path.file_name.is_signed,
         "{} is not signed",
@@ -66,25 +65,22 @@ fn validate_metadata_qr(qr_path: &QrPath, public_key: &str, eth_public_key: &str
             &signed.verifier
         ),
     };
-    verify_signature(
-        &signed.verifier,
-        match encryption {
-            Encryption::Sr25519 => public_key,
-            Encryption::Ethereum | Encryption::Ecdsa => eth_public_key,
-            _ => bail!("unsupported verifier type: {:?}", &signed.verifier),
-        },
-    )?;
 
     let (meta, _) = ContentLoadMeta::from_slice(&signed.message)
         .meta_genhash()
         .map_err(|e| anyhow!("{:?}", e))?;
     let meta_values = MetaValues::from_slice_metadata(&meta).map_err(|e| anyhow!("{:?}", e))?;
-    verify_signature(
+
+    let verifier = &chain_verifier_map.get(&meta_values.name.to_lowercase()).unwrap();
+    let public_key = match encryption {
+      Encryption::Sr25519 => &verifier.public_key,
+      Encryption::Ethereum | Encryption::Ecdsa => &verifier.ethereum_public_key.as_ref().unwrap(),
+      _ => bail!("unsupported verifier type: {:?}", &signed.verifier)
+    };
+
+  verify_signature(
         &signed.verifier,
-        &chain_verifier_map
-            .get(&meta_values.name.to_lowercase())
-            .unwrap()
-            .public_key,
+        public_key,
     )?;
 
     verify_filename(&meta_values, &qr_path.file_name)?;

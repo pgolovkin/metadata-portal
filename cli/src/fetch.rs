@@ -7,7 +7,7 @@ use generate_message::parser::Token;
 use log::warn;
 
 use crate::config::Chain;
-use crate::lib::types::get_crypto;
+use crate::utils::types::get_crypto;
 
 pub(crate) trait Fetcher {
     fn fetch_specs(&self, chain: &Chain) -> Result<NetworkSpecs>;

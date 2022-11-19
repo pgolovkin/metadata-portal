@@ -371,3 +371,7 @@ qr_dir = "public/qr"
   [chains."Beresheet"]
   name = "Beresheet_v46"
   color = "#111111"
+
+  [chains."Myriad"]
+  name = "appchain"
+  color = "#7342CC"

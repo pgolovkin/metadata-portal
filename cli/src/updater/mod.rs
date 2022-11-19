@@ -12,7 +12,7 @@ use sp_core::H256;
 
 use crate::config::AppConfig;
 use crate::fetch::Fetcher;
-use crate::lib::types::get_crypto;
+use crate::utils::types::get_crypto;
 use crate::qrs::{find_metadata_qrs, find_spec_qrs};
 use crate::source::{save_source_info, Source};
 use crate::updater::generate::{download_metadata_qr, generate_metadata_qr, generate_spec_qr};

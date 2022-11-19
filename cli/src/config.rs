@@ -112,7 +112,7 @@ impl AppConfig {
 pub(crate) struct Verifier {
     pub(crate) name: String,
     pub(crate) public_key: String,
-    pub(crate) ethereum_public_key: String,
+    pub(crate) ethereum_public_key: Option<String>,
 }
 
 #[cfg(test)]
@@ -121,7 +121,7 @@ impl Default for Verifier {
         Self {
             name: "Test Verifier".to_string(),
             public_key: "123".to_string(),
-            ethereum_public_key: "321".to_string(),
+            ethereum_public_key: Some("321".to_string()),
         }
     }
 }
